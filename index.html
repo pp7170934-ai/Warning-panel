@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roblox Warning Panel - Account Login + Backup</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(0, 170, 255, 0.22), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(111, 70, 255, 0.2), transparent 35%),
+        #070b14;
+      color: #eaf2ff;
+      overflow-x: hidden;
+    }
+    .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+    .sidebar {
+      background: rgba(9, 15, 28, 0.94);
+      border-right: 1px solid rgba(105, 185, 255, 0.18);
+      padding: 22px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+    .brand-icon {
+      width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center;
+      background: linear-gradient(135deg, #00aaff, #7c4dff);
+      box-shadow: 0 0 20px rgba(0, 170, 255, 0.45);
+      font-weight: 900; color: white;
+    }
+    .brand h1 { font-size: 18px; letter-spacing: 0.3px; }
+    .brand p { color: #8ca4c7; font-size: 12px; margin-top: 2px; }
+    .nav { display: grid; gap: 10px; }
+    .nav button {
+      border: 1px solid rgba(130, 190, 255, 0.12);
+      background: rgba(255, 255, 255, 0.035);
+      color: #bcd4f6; padding: 12px 14px; border-radius: 14px; text-align: left;
+      cursor: pointer; transition: 0.18s; font-weight: 700;
+    }
+    .nav button:hover, .nav button.active {
+      background: linear-gradient(135deg, rgba(0, 170, 255, 0.22), rgba(124, 77, 255, 0.18));
+      color: white; border-color: rgba(0, 170, 255, 0.45); transform: translateX(3px);
+    }
+    .sidebar-footer {
+      position: absolute; left: 22px; right: 22px; bottom: 22px; padding: 14px;
+      border-radius: 16px; background: rgba(0, 170, 255, 0.08);
+      border: 1px solid rgba(0, 170, 255, 0.2); color: #a9c8f3;
+      font-size: 13px; line-height: 1.45;
+    }
+    .main { padding: 24px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 22px; }
+    .title h2 { font-size: 28px; margin-bottom: 5px; }
+    .title p { color: #8ca4c7; }
+    .staff-card {
+      display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(130,190,255,0.16); padding: 10px 14px; border-radius: 18px;
+    }
+    .avatar {
+      width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,#00aaff,#7c4dff);
+      display: grid; place-items: center; font-weight: 900;
+    }
+    .staff-card strong { display: block; font-size: 14px; }
+    .staff-card span { color: #8ca4c7; font-size: 12px; }
+    .tab-page { display: none; }
+    .tab-page.active { display: block; }
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: 16px; margin-bottom: 18px; }
+    .stat {
+      background: rgba(255,255,255,0.055); border: 1px solid rgba(130,190,255,0.14);
+      border-radius: 20px; padding: 18px; box-shadow: 0 12px 35px rgba(0,0,0,0.22);
+    }
+    .stat p { color: #93acd1; font-size: 13px; margin-bottom: 8px; }
+    .stat h3 { font-size: 30px; }
+    .panel {
+      background: rgba(9,15,28,0.76); border: 1px solid rgba(130,190,255,0.16);
+      border-radius: 22px; padding: 18px; box-shadow: 0 18px 42px rgba(0,0,0,0.25);
+      backdrop-filter: blur(12px); margin-bottom: 18px;
+    }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .panel-header h3 { font-size: 18px; }
+    .panel-header span { color: #8ca4c7; font-size: 13px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    input, textarea, select {
+      width: 100%; background: rgba(255,255,255,0.065); border: 1px solid rgba(130,190,255,0.16);
+      color: white; border-radius: 14px; padding: 12px 13px; outline: none; margin-bottom: 11px;
+    }
+    select option { background: #101827; color: white; }
+    textarea { min-height: 110px; resize: vertical; }
+    input:focus, textarea:focus, select:focus { border-color: rgba(0,170,255,0.65); box-shadow: 0 0 0 3px rgba(0,170,255,0.12); }
+    button.primary, button.danger, button.ghost {
+      border: none; color: white; padding: 12px 16px; border-radius: 14px; cursor: pointer;
+      font-weight: 900; transition: 0.18s; white-space: nowrap;
+    }
+    button.primary { background: linear-gradient(135deg, #00aaff, #6f46ff); box-shadow: 0 10px 25px rgba(0,170,255,0.22); }
+    button.danger { background: linear-gradient(135deg, #ff4d6d, #b5179e); box-shadow: 0 10px 25px rgba(255,77,109,0.2); }
+    button.ghost { background: rgba(255,255,255,0.06); border: 1px solid rgba(130,190,255,0.18); }
+    button.primary:hover, button.danger:hover, button.ghost:hover { transform: translateY(-2px); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .list { display: grid; gap: 10px; max-height: 560px; overflow-y: auto; padding-right: 4px; }
+    .item {
+      background: rgba(255,255,255,0.045); border: 1px solid rgba(130,190,255,0.12);
+      border-radius: 17px; padding: 14px; display: grid; gap: 8px;
+    }
+    .item-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .item h4 { font-size: 17px; }
+    .item p { color: #9ab3d8; line-height: 1.42; font-size: 13px; }
+    .badge {
+      font-size: 12px; padding: 6px 9px; border-radius: 999px; background: rgba(0,170,255,0.11);
+      border: 1px solid rgba(0,170,255,0.22); color: #bfe7ff;
+    }
+    .badge.red { background: rgba(255,77,109,0.12); border-color: rgba(255,77,109,0.28); color: #ffc2cd; }
+    .badge.green { background: rgba(72,199,142,0.12); border-color: rgba(72,199,142,0.28); color: #b9ffd9; }
+    .badge.purple { background: rgba(199,125,255,0.12); border-color: rgba(199,125,255,0.28); color: #e7c7ff; }
+    .warning-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .mini-btn {
+      border: 1px solid rgba(130,190,255,0.16); background: rgba(255,255,255,0.055);
+      color: white; border-radius: 12px; padding: 8px 10px; cursor: pointer; font-weight: 800; font-size: 12px;
+    }
+    .mini-btn.promote { color: #b9ffd9; border-color: rgba(72,199,142,0.28); }
+    .mini-btn.demote { color: #ffd166; border-color: rgba(255,209,102,0.28); }
+    .mini-btn.remove { color: #ff9aae; border-color: rgba(255,77,109,0.25); }
+    .notice, .success-notice {
+      padding: 14px; border-radius: 16px; line-height: 1.45; margin-bottom: 14px; font-size: 14px;
+    }
+    .notice { background: rgba(255,209,102,0.1); border: 1px solid rgba(255,209,102,0.25); color: #ffe0a3; }
+    .success-notice { background: rgba(72,199,142,0.1); border: 1px solid rgba(72,199,142,0.25); color: #c5ffe0; }
+    .rank-row { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; }
+    .rank-num {
+      width: 26px; height: 26px; border-radius: 9px; display: grid; place-items: center;
+      background: rgba(0,170,255,0.16); border: 1px solid rgba(0,170,255,0.28); color: #bfe7ff; font-weight: 900;
+    }
+    .rank-group { margin-bottom: 14px; }
+    .rank-group-title {
+      display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 10px; padding: 10px 12px; border-radius: 14px;
+      background: rgba(0,170,255,0.08); border: 1px solid rgba(0,170,255,0.16);
+    }
+    .password-text {
+      font-family: Consolas, monospace;
+      color: #eaf2ff;
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(130,190,255,0.14);
+      border-radius: 10px;
+      padding: 5px 7px;
+      display: inline-block;
+      margin-top: 3px;
+    }
+    .toast {
+      position: fixed; right: 22px; bottom: 22px; background: rgba(9,15,28,0.96);
+      border: 1px solid rgba(0,170,255,0.38); color: white; padding: 14px 16px;
+      border-radius: 16px; box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+      opacity: 0; transform: translateY(12px); pointer-events: none; transition: 0.22s;
+      max-width: 460px; z-index: 50;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .small-note { color: #829ac0; font-size: 12px; line-height: 1.45; margin-top: 8px; }
+    .locked-overlay {
+      opacity: 0.55;
+      pointer-events: none;
+      filter: grayscale(0.3);
+    }
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { height: auto; position: relative; }
+      .sidebar-footer { position: static; margin-top: 20px; }
+      .stats, .grid-2 { grid-template-columns: 1fr; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">W</div>
+        <div>
+          <h1>Warning Panel</h1>
+          <p>Account Login Dashboard</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="active" onclick="openTab('dashboard', this)">Dashboard</button>
+        <button onclick="openTab('warningList', this)">Warning List</button>
+        <button onclick="openTab('giveWarning', this)">Give Warning</button>
+        <button onclick="openTab('whitelist', this)">Whitelist List</button>
+        <button onclick="openTab('ranks', this)">Ranks</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <strong>Demo Account System</strong><br />
+        Accounts are local only: account name, password, and rank.
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="topbar">
+        <div class="title">
+          <h2 id="pageTitle">Dashboard</h2>
+          <p id="pageSub">Login with account name and password.</p>
+        </div>
+
+        <div class="staff-card">
+          <div class="avatar" id="staffAvatarLetter">?</div>
+          <div>
+            <strong id="currentStaffText">Not logged in</strong>
+            <span id="staffStatusText">No Access</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="tab-page active">
+        <div class="stats">
+          <div class="stat"><p>Total Warnings</p><h3 id="totalWarnings">0</h3></div>
+          <div class="stat"><p>Warned Players</p><h3 id="warnedPlayers">0</h3></div>
+          <div class="stat"><p>Created Accounts</p><h3 id="accountCount">0</h3></div>
+          <div class="stat"><p>Your Rank</p><h3 id="accessStatus">NO</h3></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div><h3>Account Login</h3><span>Type account name and password only</span></div>
+            </div>
+
+            <input id="loginNameInput" type="text" placeholder="Account name" value="Liamthebest10001" />
+            <input id="loginPasswordInput" type="password" placeholder="Password" value="owner123" />
+            <div class="toolbar">
+              <button class="primary" onclick="loginAccount()">Login</button>
+              <button class="ghost" onclick="logoutAccount()">Logout</button>
+            </div>
+
+            <p class="small-note">
+              Default owner login: account name <strong>Liamthebest10001</strong>, password <strong>owner123</strong>.
+              Change it after downloading by editing the default account password inside the HTML file.
+            </p>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header"><div><h3>Latest Warnings</h3><span>Newest records</span></div></div>
+            <div id="latestWarnings" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="warningList" class="tab-page">
+        <div class="panel">
+          <div class="panel-header">
+            <div><h3>Warning List</h3><span>Every warned target and reason appears here</span></div>
+          </div>
+
+          <div class="toolbar">
+            <input id="warningSearch" type="text" placeholder="Search target, reason, or staff..." oninput="renderWarnings()" />
+            <button class="ghost" onclick="clearWarningSearch()">Clear Search</button>
+          </div>
+
+          <div id="warningListContainer" class="list"></div>
+        </div>
+      </section>
+
+      <section id="giveWarning" class="tab-page">
+        <div id="permissionBox"></div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div><h3>Give Warning</h3><span>Whitelist Staff+ can give warnings</span></div>
+          </div>
+
+          <input id="targetInput" type="text" placeholder="Target username, example: CoolPlayer123" />
+          <textarea id="reasonInput" placeholder="Warning reason..."></textarea>
+
+          <div class="toolbar">
+            <button class="primary" onclick="giveWarning()">Give Warning</button>
+            <button class="ghost" onclick="fillExample()">Fill Example</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="whitelist" class="tab-page">
+        <div id="whitelistPermissionBox"></div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div><h3>Account / Whitelist List</h3><span>Liam can see, remove, and edit account passwords here</span></div>
+            </div>
+            <div id="accountContainer" class="list"></div>
+          </div>
+
+          <div>
+            <div id="createAccountPanel" class="panel">
+              <div class="panel-header">
+                <div><h3>Create New Account</h3><span>Owner only — no Roblox connection</span></div>
+              </div>
+
+              <input id="newAccountName" type="text" placeholder="New account name" />
+              <input id="newAccountPassword" type="text" placeholder="New password" />
+              <select id="rankSelect"></select>
+
+              <div class="toolbar">
+                <button class="primary" onclick="createAccount()">Create Account</button>
+                <button class="ghost" onclick="generatePassword()">Generate Password</button>
+              </div>
+
+              <p class="small-note">
+                This is the empty box area you mentioned. Liam / Owner can create account names and passwords here. It is not connected to Roblox.
+              </p>
+            </div>
+
+            <div id="backupPanel" class="panel">
+              <div class="panel-header">
+                <div><h3>Backup Data</h3><span>Owner only — export or import saved data</span></div>
+              </div>
+
+              <div class="toolbar">
+                <button class="primary" onclick="exportBackup()">Export Backup</button>
+                <button class="ghost" onclick="document.getElementById('backupFileInput').click()">Import Backup</button>
+              </div>
+
+              <input id="backupFileInput" type="file" accept=".json,application/json" style="display:none" onchange="importBackup(event)" />
+
+              <p class="small-note">
+                Export creates a JSON backup file with accounts and warnings. Import restores from that file.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="ranks" class="tab-page">
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div><h3>Ranks: Lowest to Highest</h3><span>Whitelist permission chain</span></div>
+            </div>
+
+            <div id="rankInfoList" class="list"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div><h3>Rank Management</h3><span>Promote, demote, or kick accounts</span></div>
+            </div>
+
+            <div id="rankManagementList" class="list"></div>
+
+            <p class="small-note">
+              Owner can control everyone. Management can control Manager and below. Manager can control Admin and Staff.
+            </p>
+
+            <div class="toolbar" style="margin-top: 12px;">
+              <button class="danger" onclick="resetDefaults()">Reset Defaults</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const STORAGE_KEY_WARNINGS = "warning_panel_accounts_warnings_v1";
+    const STORAGE_KEY_ACCOUNTS = "warning_panel_accounts_users_v1";
+    const STORAGE_KEY_SESSION = "warning_panel_accounts_session_v1";
+
+    const RANKS = [
+      { key: "staff", name: "Whitelist Staff", level: 1, canWarn: true, canRemoveWarnings: false, canManageRanks: false, canKick: false },
+      { key: "admin", name: "Whitelist Admin", level: 2, canWarn: true, canRemoveWarnings: true, canManageRanks: false, canKick: false },
+      { key: "manager", name: "Whitelist Manager", level: 3, canWarn: true, canRemoveWarnings: true, canManageRanks: true, canKick: true },
+      { key: "management", name: "Whitelist Management", level: 4, canWarn: true, canRemoveWarnings: true, canManageRanks: true, canKick: true },
+      { key: "owner", name: "Whitelist Owner", level: 5, canWarn: true, canRemoveWarnings: true, canManageRanks: true, canKick: true }
+    ];
+
+    const DEFAULT_WARNINGS = [
+      {
+        id: "demo-1",
+        target: "CoolPlayer123",
+        reason: "Demo warning record.",
+        staff: "Liamthebest10001",
+        createdAt: new Date().toISOString()
+      }
+    ];
+
+    const DEFAULT_ACCOUNTS = [
+      { name: "Liamthebest10001", password: "owner123", rank: "owner", createdBy: "System", createdAt: new Date().toISOString() },
+      { name: "200_1001", password: "management123", rank: "management", createdBy: "System", createdAt: new Date().toISOString() },
+      { name: "GinJeremyG4", password: "manager123", rank: "manager", createdBy: "System", createdAt: new Date().toISOString() }
+    ];
+
+    let warnings = loadJson(STORAGE_KEY_WARNINGS, DEFAULT_WARNINGS);
+    let accounts = loadJson(STORAGE_KEY_ACCOUNTS, DEFAULT_ACCOUNTS);
+    let currentAccountName = localStorage.getItem(STORAGE_KEY_SESSION) || "";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderRankSelect();
+      updateAll();
+    });
+
+    function loadJson(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : structuredClone(fallback);
+      } catch {
+        return structuredClone(fallback);
+      }
+    }
+
+    function saveAll() {
+      localStorage.setItem(STORAGE_KEY_WARNINGS, JSON.stringify(warnings));
+      localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accounts));
+      localStorage.setItem(STORAGE_KEY_SESSION, currentAccountName || "");
+    }
+
+    function normalizeName(name) {
+      return String(name || "").trim().toLowerCase();
+    }
+
+    function getRank(rankKey) {
+      return RANKS.find(rank => rank.key === rankKey) || RANKS[0];
+    }
+
+    function getRankByLevel(level) {
+      return RANKS.find(rank => rank.level === level) || null;
+    }
+
+    function getAccount(name) {
+      return accounts.find(account => normalizeName(account.name) === normalizeName(name));
+    }
+
+    function getCurrentAccount() {
+      return currentAccountName ? getAccount(currentAccountName) : null;
+    }
+
+    function getCurrentRank() {
+      const account = getCurrentAccount();
+      return account ? getRank(account.rank) : null;
+    }
+
+    function isOwner() {
+      const rank = getCurrentRank();
+      return rank && rank.key === "owner";
+    }
+
+    function canCurrentControlAccount(targetAccount) {
+      const currentRank = getCurrentRank();
+      const targetRank = getRank(targetAccount.rank);
+
+      if (!currentRank || !currentRank.canManageRanks) return false;
+      if (normalizeName(targetAccount.name) === normalizeName(currentAccountName)) return false;
+      if (currentRank.key === "owner") return true;
+
+      return targetRank.level < currentRank.level;
+    }
+
+    function canCurrentAddRank(rankKey) {
+      const currentRank = getCurrentRank();
+      const targetRank = getRank(rankKey);
+
+      if (!currentRank || !currentRank.canManageRanks) return false;
+      if (currentRank.key === "owner") return true;
+
+      return targetRank.level < currentRank.level;
+    }
+
+    function canCurrentKickAccount(targetAccount) {
+      const currentRank = getCurrentRank();
+      const targetRank = getRank(targetAccount.rank);
+
+      if (!currentRank || !currentRank.canKick) return false;
+      if (normalizeName(targetAccount.name) === normalizeName(currentAccountName)) return false;
+      if (currentRank.key === "owner") return true;
+
+      return targetRank.level < currentRank.level;
+    }
+
+    function loginAccount() {
+      const name = document.getElementById("loginNameInput").value.trim();
+      const password = document.getElementById("loginPasswordInput").value;
+
+      const account = getAccount(name);
+
+      if (!account || account.password !== password) {
+        showToast("Invalid account name or password.");
+        return;
+      }
+
+      currentAccountName = account.name;
+      saveAll();
+      updateAll();
+      showToast("Logged in as " + account.name + ".");
+    }
+
+    function logoutAccount() {
+      currentAccountName = "";
+      saveAll();
+      updateAll();
+      showToast("Logged out.");
+    }
+
+    function openTab(tabId, button) {
+      document.querySelectorAll(".tab-page").forEach(page => page.classList.remove("active"));
+      document.querySelectorAll(".nav button").forEach(btn => btn.classList.remove("active"));
+
+      document.getElementById(tabId).classList.add("active");
+      button.classList.add("active");
+
+      const titles = {
+        dashboard: ["Dashboard", "Login with account name and password."],
+        warningList: ["Warning List", "View targets, warning reasons, staff, and remove records."],
+        giveWarning: ["Give Warning", "Submit new warnings for players."],
+        whitelist: ["Whitelist List", "Owner can create accounts. Other ranks can only view allowed account info."],
+        ranks: ["Ranks", "Manage rank promotions, demotions, and kicks."]
+      };
+
+      document.getElementById("pageTitle").textContent = titles[tabId][0];
+      document.getElementById("pageSub").textContent = titles[tabId][1];
+
+      updateAll();
+    }
+
+    function giveWarning() {
+      const rank = getCurrentRank();
+
+      if (!rank || !rank.canWarn) {
+        showToast("Access denied. You are not logged in or your rank cannot warn.");
+        return;
+      }
+
+      const target = document.getElementById("targetInput").value.trim();
+      const reason = document.getElementById("reasonInput").value.trim();
+
+      if (!target) {
+        showToast("Type the target username first.");
+        return;
+      }
+
+      if (!reason) {
+        showToast("Type a warning reason first.");
+        return;
+      }
+
+      warnings.unshift({
+        id: String(Date.now()),
+        target,
+        reason,
+        staff: currentAccountName,
+        createdAt: new Date().toISOString()
+      });
+
+      document.getElementById("targetInput").value = "";
+      document.getElementById("reasonInput").value = "";
+
+      saveAll();
+      updateAll();
+
+      showToast("Warning added for " + target + ".");
+    }
+
+    function removeWarning(id) {
+      const rank = getCurrentRank();
+
+      if (!rank || !rank.canRemoveWarnings) {
+        showToast("Access denied. Your rank cannot remove warnings.");
+        return;
+      }
+
+      warnings = warnings.filter(warning => warning.id !== id);
+      saveAll();
+      updateAll();
+      showToast("Warning removed.");
+    }
+
+    function createAccount() {
+      if (!isOwner()) {
+        showToast("Only Whitelist Owner can create accounts here.");
+        return;
+      }
+
+      const name = document.getElementById("newAccountName").value.trim();
+      const password = document.getElementById("newAccountPassword").value;
+      const rankKey = document.getElementById("rankSelect").value;
+
+      if (!name) {
+        showToast("Type an account name.");
+        return;
+      }
+
+      if (!password) {
+        showToast("Type a password.");
+        return;
+      }
+
+      if (getAccount(name)) {
+        showToast("That account name already exists.");
+        return;
+      }
+
+      accounts.push({
+        name,
+        password,
+        rank: rankKey,
+        createdBy: currentAccountName,
+        createdAt: new Date().toISOString()
+      });
+
+      document.getElementById("newAccountName").value = "";
+      document.getElementById("newAccountPassword").value = "";
+
+      saveAll();
+      updateAll();
+
+      showToast("Created account " + name + " as " + getRank(rankKey).name + ".");
+    }
+
+    function generatePassword() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+      let password = "";
+
+      for (let i = 0; i < 10; i++) {
+        password += chars[Math.floor(Math.random() * chars.length)];
+      }
+
+      document.getElementById("newAccountPassword").value = password;
+      showToast("Generated password.");
+    }
+
+    function exportBackup() {
+      if (!isOwner()) {
+        showToast("Only Whitelist Owner can export backups.");
+        return;
+      }
+
+      const backup = {
+        app: "Roblox Warning Panel",
+        version: "account-login-v5",
+        exportedAt: new Date().toISOString(),
+        exportedBy: currentAccountName,
+        warnings: warnings,
+        accounts: accounts
+      };
+
+      const blob = new Blob([JSON.stringify(backup, null, 2)], {
+        type: "application/json"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const safeDate = new Date().toISOString().slice(0, 19).replaceAll(":", "-");
+
+      link.href = url;
+      link.download = "warning-panel-backup-" + safeDate + ".json";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+      showToast("Backup exported.");
+    }
+
+    function importBackup(event) {
+      if (!isOwner()) {
+        showToast("Only Whitelist Owner can import backups.");
+        event.target.value = "";
+        return;
+      }
+
+      const file = event.target.files && event.target.files[0];
+
+      if (!file) {
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = function() {
+        try {
+          const backup = JSON.parse(String(reader.result || ""));
+
+          if (!backup || !Array.isArray(backup.warnings) || !Array.isArray(backup.accounts)) {
+            showToast("Invalid backup file.");
+            event.target.value = "";
+            return;
+          }
+
+          const confirmed = confirm("Import this backup? This will replace current warnings and accounts.");
+
+          if (!confirmed) {
+            event.target.value = "";
+            return;
+          }
+
+          warnings = backup.warnings;
+          accounts = backup.accounts;
+
+          const stillExists = getAccount(currentAccountName);
+          if (!stillExists) {
+            currentAccountName = "";
+          }
+
+          saveAll();
+          updateAll();
+
+          showToast("Backup imported.");
+        } catch (err) {
+          showToast("Import failed. Invalid JSON backup.");
+        }
+
+        event.target.value = "";
+      };
+
+      reader.readAsText(file);
+    }
+
+    function promoteAccount(name) {
+      const account = getAccount(name);
+
+      if (!account) {
+        showToast("Account not found.");
+        return;
+      }
+
+      if (!canCurrentControlAccount(account)) {
+        showToast("Access denied. You cannot promote this account.");
+        return;
+      }
+
+      const currentTargetRank = getRank(account.rank);
+      const nextRank = getRankByLevel(currentTargetRank.level + 1);
+
+      if (!nextRank) {
+        showToast(account.name + " is already at the highest rank.");
+        return;
+      }
+
+      if (!canCurrentAddRank(nextRank.key)) {
+        showToast("Access denied. You cannot promote someone to " + nextRank.name + ".");
+        return;
+      }
+
+      account.rank = nextRank.key;
+      saveAll();
+      updateAll();
+
+      showToast(account.name + " promoted to " + nextRank.name + ".");
+    }
+
+    function demoteAccount(name) {
+      const account = getAccount(name);
+
+      if (!account) {
+        showToast("Account not found.");
+        return;
+      }
+
+      if (!canCurrentControlAccount(account)) {
+        showToast("Access denied. You cannot demote this account.");
+        return;
+      }
+
+      const currentTargetRank = getRank(account.rank);
+      const previousRank = getRankByLevel(currentTargetRank.level - 1);
+
+      if (!previousRank) {
+        showToast(account.name + " is already at the lowest rank.");
+        return;
+      }
+
+      account.rank = previousRank.key;
+      saveAll();
+      updateAll();
+
+      showToast(account.name + " demoted to " + previousRank.name + ".");
+    }
+
+    function kickAccount(name) {
+      const account = getAccount(name);
+
+      if (!account) {
+        showToast("Account not found.");
+        return;
+      }
+
+      if (!canCurrentKickAccount(account)) {
+        showToast("Access denied. Manager+ can only kick lower-ranked accounts.");
+        return;
+      }
+
+      accounts = accounts.filter(item => normalizeName(item.name) !== normalizeName(name));
+      saveAll();
+      updateAll();
+
+      showToast(name + " was kicked from whitelist accounts.");
+    }
+
+    function removeAccount(name) {
+      if (!isOwner()) {
+        showToast("Only Whitelist Owner can remove accounts from this list.");
+        return;
+      }
+
+      const account = getAccount(name);
+
+      if (!account) {
+        showToast("Account not found.");
+        return;
+      }
+
+      if (normalizeName(account.name) === normalizeName(currentAccountName)) {
+        showToast("You cannot remove the account you are currently logged into.");
+        return;
+      }
+
+      accounts = accounts.filter(item => normalizeName(item.name) !== normalizeName(name));
+      saveAll();
+      updateAll();
+
+      showToast("Removed account " + name + ".");
+    }
+
+    function editAccountPassword(name) {
+      if (!isOwner()) {
+        showToast("Only Whitelist Owner can edit account passwords.");
+        return;
+      }
+
+      const account = getAccount(name);
+
+      if (!account) {
+        showToast("Account not found.");
+        return;
+      }
+
+      const newPassword = prompt("Enter new password for " + account.name + ":", account.password);
+
+      if (newPassword === null) {
+        return;
+      }
+
+      const cleanPassword = String(newPassword).trim();
+
+      if (!cleanPassword) {
+        showToast("Password cannot be empty.");
+        return;
+      }
+
+      account.password = cleanPassword;
+      saveAll();
+      updateAll();
+
+      showToast("Password updated for " + account.name + ".");
+    }
+
+    function clearWarningSearch() {
+      document.getElementById("warningSearch").value = "";
+      renderWarnings();
+    }
+
+    function fillExample() {
+      document.getElementById("targetInput").value = "CoolPlayer123";
+      document.getElementById("reasonInput").value = "Breaking server rules after being told to stop.";
+    }
+
+    function renderRankSelect() {
+      const select = document.getElementById("rankSelect");
+      select.innerHTML = RANKS.map(rank => `<option value="${rank.key}">${rank.name}</option>`).join("");
+      select.value = "staff";
+    }
+
+    function updateAll() {
+      const currentAccount = getCurrentAccount();
+      const currentRank = getCurrentRank();
+
+      document.getElementById("currentStaffText").textContent = currentAccount ? currentAccount.name : "Not logged in";
+      document.getElementById("staffStatusText").textContent = currentRank ? currentRank.name : "No Access";
+      document.getElementById("staffAvatarLetter").textContent = currentAccount ? currentAccount.name[0].toUpperCase() : "?";
+      document.getElementById("accessStatus").textContent = currentRank ? currentRank.name.replace("Whitelist ", "") : "NO";
+
+      document.getElementById("totalWarnings").textContent = warnings.length;
+      document.getElementById("warnedPlayers").textContent = new Set(warnings.map(w => normalizeName(w.target))).size;
+      document.getElementById("accountCount").textContent = accounts.length;
+
+      renderPermissionBoxes();
+      renderWarnings();
+      renderLatestWarnings();
+      renderAccounts();
+      renderRankInfoList();
+      renderRankManagementList();
+    }
+
+    function renderPermissionBoxes() {
+      const rank = getCurrentRank();
+
+      document.getElementById("permissionBox").innerHTML = rank && rank.canWarn
+        ? `<div class="success-notice">Access granted. ${escapeHtml(currentAccountName)} can give warnings as ${escapeHtml(rank.name)}.</div>`
+        : `<div class="notice">Access denied. Log in with an allowed account first.</div>`;
+
+      document.getElementById("whitelistPermissionBox").innerHTML = isOwner()
+        ? `<div class="success-notice">Owner access granted. Liam can create accounts and edit account passwords here.</div>`
+        : `<div class="notice">Only Whitelist Owner can create new accounts. The create-account box is hidden for this rank.</div>`;
+
+      const createPanel = document.getElementById("createAccountPanel");
+      if (createPanel) {
+        createPanel.style.display = isOwner() ? "block" : "none";
+      }
+
+      const backupPanel = document.getElementById("backupPanel");
+      if (backupPanel) {
+        backupPanel.style.display = isOwner() ? "block" : "none";
+      }
+    }
+
+    function renderWarnings() {
+      const container = document.getElementById("warningListContainer");
+      const search = normalizeName(document.getElementById("warningSearch")?.value || "");
+      let filtered = warnings;
+
+      if (search) {
+        filtered = warnings.filter(warning => {
+          return normalizeName(warning.target).includes(search)
+            || normalizeName(warning.reason).includes(search)
+            || normalizeName(warning.staff).includes(search);
+        });
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="item"><p>No warnings found.</p></div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(warning => warningHtml(warning, true)).join("");
+    }
+
+    function renderLatestWarnings() {
+      const container = document.getElementById("latestWarnings");
+      const latest = warnings.slice(0, 5);
+
+      if (latest.length === 0) {
+        container.innerHTML = `<div class="item"><p>No warning records yet.</p></div>`;
+        return;
+      }
+
+      container.innerHTML = latest.map(warning => warningHtml(warning, false)).join("");
+    }
+
+    function warningHtml(warning, showActions) {
+      const removeButton = showActions
+        ? `<button class="mini-btn remove" onclick="removeWarning('${escapeAttr(warning.id)}')">Remove Warning</button>`
+        : "";
+
+      return `
+        <div class="item">
+          <div class="item-top">
+            <h4>${escapeHtml(warning.target)}</h4>
+            <span class="badge red">Warned</span>
+          </div>
+          <p><strong>Reason:</strong> ${escapeHtml(warning.reason)}</p>
+          <p><strong>Staff:</strong> ${escapeHtml(warning.staff)} • <strong>Time:</strong> ${formatDate(warning.createdAt)}</p>
+          <div class="warning-actions">${removeButton}</div>
+        </div>
+      `;
+    }
+
+    function renderAccounts() {
+      const container = document.getElementById("accountContainer");
+      const sorted = [...accounts].sort((a, b) => getRank(b.rank).level - getRank(a.rank).level);
+
+      if (sorted.length === 0) {
+        container.innerHTML = `<div class="item"><p>No accounts created.</p></div>`;
+        return;
+      }
+
+      container.innerHTML = sorted.map(account => {
+        const rank = getRank(account.rank);
+        const passwordVisible = isOwner();
+        const editButton = isOwner()
+          ? `<button class="mini-btn promote" onclick="editAccountPassword('${escapeAttr(account.name)}')">Edit Password</button>`
+          : "";
+
+        const removeButton = isOwner() && normalizeName(account.name) !== normalizeName(currentAccountName)
+          ? `<button class="mini-btn remove" onclick="removeAccount('${escapeAttr(account.name)}')">Remove Account</button>`
+          : "";
+
+        return `
+          <div class="item">
+            <div class="item-top">
+              <h4>${escapeHtml(account.name)}</h4>
+              <span class="badge purple">${escapeHtml(rank.name)}</span>
+            </div>
+            <p><strong>Password:</strong> ${passwordVisible ? `<span class="password-text">${escapeHtml(account.password)}</span>` : "Hidden"}</p>
+            <p><strong>Created by:</strong> ${escapeHtml(account.createdBy || "Unknown")} • <strong>Time:</strong> ${formatDate(account.createdAt)}</p>
+            <div class="warning-actions">${editButton}${removeButton}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderRankInfoList() {
+      const container = document.getElementById("rankInfoList");
+
+      container.innerHTML = RANKS.map((rank, index) => `
+        <div class="item rank-row">
+          <div class="rank-num">${index + 1}</div>
+          <div>
+            <div class="item-top">
+              <h4>${escapeHtml(rank.name)}</h4>
+              <span class="badge">Level ${rank.level}</span>
+            </div>
+            <p>${rankDescription(rank)}</p>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderRankManagementList() {
+      const container = document.getElementById("rankManagementList");
+      const sortedRanks = [...RANKS].sort((a, b) => b.level - a.level);
+
+      container.innerHTML = sortedRanks.map(rank => {
+        const usersInRank = accounts
+          .filter(account => account.rank === rank.key)
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        const usersHtml = usersInRank.length === 0
+          ? `<div class="item"><p>No accounts in this rank.</p></div>`
+          : usersInRank.map(account => {
+              const canControl = canCurrentControlAccount(account);
+              const canKick = canCurrentKickAccount(account);
+              const currentTargetRank = getRank(account.rank);
+              const nextRank = getRankByLevel(currentTargetRank.level + 1);
+              const previousRank = getRankByLevel(currentTargetRank.level - 1);
+
+              const promoteAllowed = canControl && nextRank && canCurrentAddRank(nextRank.key);
+              const demoteAllowed = canControl && previousRank;
+
+              return `
+                <div class="item">
+                  <div class="item-top">
+                    <h4>${escapeHtml(account.name)}</h4>
+                    <span class="badge purple">${escapeHtml(rank.name)}</span>
+                  </div>
+                  <p>Password ${isOwner() ? `<span class="password-text">${escapeHtml(account.password)}</span>` : "hidden"}</p>
+                  <div class="warning-actions">
+                    ${isOwner() ? `<button class="mini-btn promote" onclick="editAccountPassword('${escapeAttr(account.name)}')">Edit Password</button>` : ""}
+                    <button class="mini-btn promote" onclick="promoteAccount('${escapeAttr(account.name)}')" ${promoteAllowed ? "" : "disabled"}>Promote</button>
+                    <button class="mini-btn demote" onclick="demoteAccount('${escapeAttr(account.name)}')" ${demoteAllowed ? "" : "disabled"}>Demote</button>
+                    <button class="mini-btn remove" onclick="kickAccount('${escapeAttr(account.name)}')" ${canKick ? "" : "disabled"}>Kick</button>
+                  </div>
+                </div>
+              `;
+            }).join("");
+
+        return `
+          <div class="rank-group">
+            <div class="rank-group-title">
+              <strong>${escapeHtml(rank.name)}</strong>
+              <span class="badge">Level ${rank.level}</span>
+            </div>
+            ${usersHtml}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function rankDescription(rank) {
+      if (rank.key === "staff") return "Can give warnings only.";
+      if (rank.key === "admin") return "Can give and remove warnings.";
+      if (rank.key === "manager") return "Can give/remove warnings, manage Staff/Admin, and kick lower ranks.";
+      if (rank.key === "management") return "Can manage Manager and below, and kick lower ranks.";
+      if (rank.key === "owner") return "Full access to all warnings, account creation, password editing, ranks, promotion, demotion, kicks, and account removal.";
+      return "";
+    }
+
+    function resetDefaults() {
+      warnings = structuredClone(DEFAULT_WARNINGS);
+      accounts = structuredClone(DEFAULT_ACCOUNTS);
+      currentAccountName = "";
+      saveAll();
+      updateAll();
+      showToast("Defaults reset. Login as Liamthebest10001 with password owner123.");
+    }
+
+    function formatDate(value) {
+      const date = new Date(value);
+      return date.toLocaleString();
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = String(text || "");
+      return div.innerHTML;
+    }
+
+    function escapeAttr(text) {
+      return String(text || "")
+        .replaceAll("\\", "\\\\")
+        .replaceAll("'", "\\'")
+        .replaceAll('"', "&quot;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+  </script>
+</body>
+</html>
