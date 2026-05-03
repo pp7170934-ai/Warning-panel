@@ -1,0 +1,702 @@
+/* =========================================================
+   MOBILE.CSS
+   Secure Roblox Warning Panel - Mobile Friendly Upgrade
+   Paste this whole file into mobile.css
+   ========================================================= */
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	width: 100%;
+	max-width: 100%;
+	overflow-x: hidden;
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	width: 100%;
+	max-width: 100%;
+	min-height: 100vh;
+	overflow-x: hidden;
+	margin: 0;
+}
+
+/* Prevent text from forcing the page sideways */
+body,
+div,
+section,
+main,
+header,
+footer,
+article,
+aside,
+nav,
+form,
+label,
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+input,
+textarea,
+select,
+td,
+th {
+	overflow-wrap: break-word;
+	word-break: break-word;
+}
+
+/* Make images never overflow */
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+/* Make buttons and inputs easier on phones */
+input,
+textarea,
+select,
+button {
+	max-width: 100%;
+	font-size: 16px;
+}
+
+/* Prevent iPhone zoom when clicking inputs */
+input,
+textarea,
+select {
+	font-size: 16px !important;
+}
+
+/* General app containers */
+.app,
+.page,
+.dashboard,
+.container,
+.main,
+.content,
+.wrapper,
+.panel,
+.card,
+.box,
+.auth-box,
+.login-box,
+.warning-panel,
+.staff-panel,
+.profile-panel,
+.avatar-panel {
+	max-width: 100%;
+}
+
+/* Tables should not break the mobile screen */
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.table-wrapper,
+.warnings-table-wrapper,
+.warning-table-wrapper,
+.staff-table-wrapper,
+.users-table-wrapper,
+.logs-table-wrapper {
+	width: 100%;
+	max-width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+/* If a table is too wide, allow scrolling instead of destroying the layout */
+.table-wrapper table,
+.warnings-table-wrapper table,
+.warning-table-wrapper table,
+.staff-table-wrapper table,
+.users-table-wrapper table,
+.logs-table-wrapper table {
+	min-width: 650px;
+}
+
+/* =========================================================
+   AVATAR / PROFILE PICTURE MOBILE SUPPORT
+   ========================================================= */
+
+.avatar,
+.profile-avatar,
+.staff-avatar,
+.user-avatar,
+.avatar-img,
+.profile-picture,
+.profile-pic,
+.avatar-preview,
+.staff-profile-picture {
+	width: 48px;
+	height: 48px;
+	min-width: 48px;
+	min-height: 48px;
+	max-width: 48px;
+	max-height: 48px;
+	border-radius: 50%;
+	object-fit: cover;
+	display: block;
+}
+
+/* Bigger profile avatar if used in profile section */
+.profile-section .avatar,
+.profile-section .profile-avatar,
+.profile-section .profile-picture,
+.profile-panel .avatar,
+.profile-panel .profile-avatar,
+.profile-panel .profile-picture,
+.avatar-panel .avatar,
+.avatar-panel .profile-avatar,
+.avatar-panel .profile-picture {
+	width: 76px;
+	height: 76px;
+	min-width: 76px;
+	min-height: 76px;
+	max-width: 76px;
+	max-height: 76px;
+}
+
+/* Avatar row layout */
+.avatar-section,
+.avatar-upload,
+.profile-upload,
+.profile-header,
+.staff-profile-header,
+.user-profile-header,
+.profile-info,
+.staff-info,
+.user-info {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	max-width: 100%;
+}
+
+/* File input should fit phone width */
+.avatar-section input[type="file"],
+.avatar-upload input[type="file"],
+.profile-upload input[type="file"],
+.profile-panel input[type="file"],
+.avatar-panel input[type="file"] {
+	width: 100%;
+	max-width: 100%;
+}
+
+/* Avatar buttons */
+.avatar-section button,
+.avatar-upload button,
+.profile-upload button,
+.profile-panel button,
+.avatar-panel button {
+	max-width: 100%;
+}
+
+/* =========================================================
+   BUTTON / ACTION LAYOUT
+   ========================================================= */
+
+button,
+.btn,
+.button,
+.action-btn,
+.primary-btn,
+.secondary-btn,
+.danger-btn,
+.delete-btn,
+.remove-btn,
+.save-btn,
+.login-btn,
+.logout-btn,
+.upload-btn {
+	white-space: normal;
+	line-height: 1.2;
+	min-height: 40px;
+	cursor: pointer;
+}
+
+/* Common action rows */
+.actions,
+.action-row,
+.button-row,
+.form-row,
+.input-row,
+.warning-actions,
+.staff-actions,
+.profile-actions,
+.admin-actions,
+.owner-actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	max-width: 100%;
+}
+
+/* Forms */
+form,
+.form,
+.login-form,
+.warning-form,
+.staff-form,
+.profile-form,
+.create-staff-form {
+	width: 100%;
+	max-width: 100%;
+}
+
+/* Inputs */
+input,
+textarea,
+select {
+	width: 100%;
+}
+
+/* Textareas */
+textarea {
+	resize: vertical;
+}
+
+/* =========================================================
+   MODALS / POPUPS
+   ========================================================= */
+
+.modal,
+.popup,
+.dialog,
+.overlay-box,
+.confirm-box {
+	max-width: calc(100vw - 24px);
+}
+
+.modal-content,
+.popup-content,
+.dialog-content,
+.confirm-content {
+	max-width: 100%;
+}
+
+/* =========================================================
+   TABLET SIZE
+   ========================================================= */
+
+@media (max-width: 900px) {
+	body {
+		width: 100%;
+	}
+
+	.app,
+	.page,
+	.dashboard,
+	.container,
+	.main,
+	.content,
+	.wrapper {
+		width: 100%;
+		max-width: 100%;
+		padding-left: 14px;
+		padding-right: 14px;
+	}
+
+	.panel,
+	.card,
+	.box,
+	.auth-box,
+	.login-box,
+	.warning-panel,
+	.staff-panel,
+	.profile-panel,
+	.avatar-panel {
+		width: 100%;
+		max-width: 100%;
+	}
+
+	/* Any grid dashboard becomes one column */
+	.dashboard-grid,
+	.main-grid,
+	.panel-grid,
+	.card-grid,
+	.stats-grid,
+	.warning-grid,
+	.staff-grid,
+	.profile-grid {
+		display: grid;
+		grid-template-columns: 1fr !important;
+		gap: 14px;
+	}
+
+	/* Header/navbar wraps instead of overflowing */
+	header,
+	.header,
+	.navbar,
+	.topbar,
+	.nav,
+	.navigation {
+		flex-wrap: wrap;
+		gap: 10px;
+		max-width: 100%;
+	}
+
+	.header-actions,
+	.nav-actions,
+	.topbar-actions,
+	.navbar-actions {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.header-actions button,
+	.nav-actions button,
+	.topbar-actions button,
+	.navbar-actions button {
+		flex: 1 1 140px;
+	}
+}
+
+/* =========================================================
+   PHONE SIZE
+   ========================================================= */
+
+@media (max-width: 600px) {
+	body {
+		font-size: 14px;
+	}
+
+	.app,
+	.page,
+	.dashboard,
+	.container,
+	.main,
+	content,
+	.content,
+	.wrapper {
+		width: 100%;
+		padding: 10px;
+	}
+
+	.panel,
+	.card,
+	.box,
+	.auth-box,
+	.login-box,
+	.warning-panel,
+	.staff-panel,
+	.profile-panel,
+	.avatar-panel {
+		width: 100%;
+		padding: 14px;
+		border-radius: 14px;
+	}
+
+	h1 {
+		font-size: 24px;
+		line-height: 1.1;
+	}
+
+	h2 {
+		font-size: 20px;
+		line-height: 1.15;
+	}
+
+	h3 {
+		font-size: 17px;
+		line-height: 1.2;
+	}
+
+	p {
+		font-size: 14px;
+		line-height: 1.4;
+	}
+
+	/* Login box */
+	.auth-box,
+	.login-box {
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+
+	/* Stack all common rows */
+	.actions,
+	.action-row,
+	.button-row,
+	.form-row,
+	.input-row,
+	.warning-actions,
+	.staff-actions,
+	.profile-actions,
+	.admin-actions,
+	.owner-actions {
+		flex-direction: column;
+		align-items: stretch;
+		width: 100%;
+		gap: 8px;
+	}
+
+	.actions > *,
+	.action-row > *,
+	.button-row > *,
+	.form-row > *,
+	.input-row > *,
+	.warning-actions > *,
+	.staff-actions > *,
+	.profile-actions > *,
+	.admin-actions > *,
+	.owner-actions > * {
+		width: 100%;
+	}
+
+	input,
+	textarea,
+	select,
+	button,
+	.btn,
+	.button,
+	.action-btn,
+	.primary-btn,
+	.secondary-btn,
+	.danger-btn,
+	.delete-btn,
+	.remove-btn,
+	.save-btn,
+	.login-btn,
+	.logout-btn,
+	.upload-btn {
+		width: 100%;
+	}
+
+	button,
+	.btn,
+	.button,
+	.action-btn,
+	.primary-btn,
+	secondary-btn,
+	.secondary-btn,
+	.danger-btn,
+	.delete-btn,
+	.remove-btn,
+	.save-btn,
+	.login-btn,
+	.logout-btn,
+	.upload-btn {
+		min-height: 44px;
+		padding: 10px 12px;
+	}
+
+	textarea {
+		min-height: 90px;
+	}
+
+	/* Avatar becomes cleaner on phones */
+	.avatar,
+	.profile-avatar,
+	.staff-avatar,
+	.user-avatar,
+	.avatar-img,
+	.profile-picture,
+	.profile-pic,
+	.avatar-preview,
+	.staff-profile-picture {
+		width: 64px;
+		height: 64px;
+		min-width: 64px;
+		min-height: 64px;
+		max-width: 64px;
+		max-height: 64px;
+	}
+
+	.profile-section .avatar,
+	.profile-section .profile-avatar,
+	.profile-section .profile-picture,
+	.profile-panel .avatar,
+	.profile-panel .profile-avatar,
+	.profile-panel .profile-picture,
+	.avatar-panel .avatar,
+	.avatar-panel .profile-avatar,
+	.avatar-panel .profile-picture {
+		width: 88px;
+		height: 88px;
+		min-width: 88px;
+		min-height: 88px;
+		max-width: 88px;
+		max-height: 88px;
+	}
+
+	.avatar-section,
+	.avatar-upload,
+	.profile-upload,
+	.profile-header,
+	.staff-profile-header,
+	.user-profile-header,
+	.profile-info,
+	.staff-info,
+	.user-info {
+		flex-direction: column;
+		align-items: flex-start;
+		width: 100%;
+	}
+
+	/* Staff / warning cards */
+	.staff-card,
+	.profile-card,
+	.warning-card,
+	.user-card,
+	.log-card {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.staff-card-header,
+	.profile-card-header,
+	.warning-card-header,
+	.user-card-header {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		width: 100%;
+	}
+
+	.warning-item,
+	.warning-row,
+	.staff-row,
+	.user-row,
+	.log-row {
+		padding: 12px;
+		border-radius: 12px;
+	}
+
+	/* Modals fit phone screen */
+	.modal,
+	.popup,
+	.dialog,
+	overlay-box,
+	.overlay-box,
+	.confirm-box {
+		width: calc(100vw - 20px) !important;
+		max-width: calc(100vw - 20px) !important;
+		max-height: calc(100vh - 30px);
+		overflow-y: auto;
+	}
+
+	.modal-content,
+	.popup-content,
+	.dialog-content,
+	.confirm-content {
+		width: 100%;
+		max-width: 100%;
+		padding: 14px;
+	}
+
+	/* File upload */
+	input[type="file"] {
+		font-size: 14px;
+		padding: 10px;
+		border-radius: 10px;
+	}
+
+	/* Hide extra spacing that usually looks bad on phones */
+	.desktop-only {
+		display: none !important;
+	}
+
+	.mobile-center {
+		text-align: center;
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+/* =========================================================
+   VERY SMALL PHONE SIZE
+   ========================================================= */
+
+@media (max-width: 380px) {
+	h1 {
+		font-size: 21px;
+	}
+
+	h2 {
+		font-size: 18px;
+	}
+
+	h3 {
+		font-size: 16px;
+	}
+
+	.panel,
+	.card,
+	.box,
+	.auth-box,
+	.login-box,
+	.warning-panel,
+	.staff-panel,
+	.profile-panel,
+	.avatar-panel {
+		padding: 12px;
+		border-radius: 12px;
+	}
+
+	.avatar,
+	.profile-avatar,
+	.staff-avatar,
+	.user-avatar,
+	.avatar-img,
+	.profile-picture,
+	.profile-pic,
+	.avatar-preview,
+	.staff-profile-picture {
+		width: 56px;
+		height: 56px;
+		min-width: 56px;
+		min-height: 56px;
+		max-width: 56px;
+		max-height: 56px;
+	}
+
+	.profile-section .avatar,
+	.profile-section .profile-avatar,
+	.profile-section .profile-picture,
+	.profile-panel .avatar,
+	.profile-panel .profile-avatar,
+	.profile-panel .profile-picture,
+	.avatar-panel .avatar,
+	.avatar-panel .profile-avatar,
+	.avatar-panel .profile-picture {
+		width: 76px;
+		height: 76px;
+		min-width: 76px;
+		min-height: 76px;
+		max-width: 76px;
+		max-height: 76px;
+	}
+
+	button,
+	.btn,
+	.button,
+	.action-btn,
+	.primary-btn,
+	.secondary-btn,
+	.danger-btn,
+	.delete-btn,
+	.remove-btn,
+	.save-btn,
+	.login-btn,
+	.logout-btn,
+	.upload-btn {
+		font-size: 14px;
+	}
+}
