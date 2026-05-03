@@ -3,15 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Secure Roblox Warning Panel</title>
+
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <div class="app">
     <aside class="sidebar">
       <div class="brand">
         <div class="brand-icon">W</div>
-        <div>
+
+        <div class="brand-text">
           <h1>Warning Panel</h1>
           <p>Secure Supabase Version</p>
         </div>
@@ -40,7 +44,8 @@
 
         <div class="staff-card">
           <div class="avatar" id="staffAvatar">?</div>
-          <div>
+
+          <div class="staff-card-text">
             <strong id="staffName">Not logged in</strong>
             <span id="staffRank">No Access</span>
           </div>
@@ -53,10 +58,25 @@
 
       <section id="dashboard" class="tab-page active">
         <div class="stats">
-          <div class="stat"><p>Total Warnings</p><h3 id="totalWarnings">0</h3></div>
-          <div class="stat"><p>Active Warnings</p><h3 id="activeWarnings">0</h3></div>
-          <div class="stat"><p>Staff Accounts</p><h3 id="staffCount">0</h3></div>
-          <div class="stat"><p>Your Rank</p><h3 id="rankStat">NO</h3></div>
+          <div class="stat">
+            <p>Total Warnings</p>
+            <h3 id="totalWarnings">0</h3>
+          </div>
+
+          <div class="stat">
+            <p>Active Warnings</p>
+            <h3 id="activeWarnings">0</h3>
+          </div>
+
+          <div class="stat">
+            <p>Staff Accounts</p>
+            <h3 id="staffCount">0</h3>
+          </div>
+
+          <div class="stat">
+            <p>Your Rank</p>
+            <h3 id="rankStat">NO</h3>
+          </div>
         </div>
 
         <div class="grid-2">
@@ -68,8 +88,10 @@
               </div>
             </div>
 
-            <input id="loginEmail" type="email" placeholder="Email address" />
-            <input id="loginPassword" type="password" placeholder="Password" />
+            <div class="form-stack">
+              <input id="loginEmail" type="email" placeholder="Email address" />
+              <input id="loginPassword" type="password" placeholder="Password" />
+            </div>
 
             <div class="toolbar">
               <button class="primary" id="loginBtn">Login</button>
@@ -88,6 +110,7 @@
                 <span>Newest database records</span>
               </div>
             </div>
+
             <div id="latestWarnings" class="list"></div>
           </div>
         </div>
@@ -102,12 +125,15 @@
 
           <div class="profile-picture-area">
             <div class="profile-preview" id="profilePreview">?</div>
+
             <div class="profile-upload-box">
               <input id="avatarFileInput" type="file" accept="image/png,image/jpeg,image/jpg,image/webp,image/gif" />
+
               <div class="toolbar">
                 <button class="primary" id="uploadAvatarBtn">Upload Avatar</button>
                 <button class="ghost" id="removeAvatarBtn">Remove Avatar</button>
               </div>
+
               <p class="small-note">
                 Recommended: square image, PNG/JPG/WebP/GIF, under 2 MB. This shows in the top-right profile card, Whitelist List, and Ranks tab.
               </p>
@@ -145,8 +171,10 @@
             </div>
           </div>
 
-          <input id="targetName" type="text" placeholder="Target Roblox username" />
-          <textarea id="warningReason" placeholder="Warning reason..."></textarea>
+          <div class="form-stack">
+            <input id="targetName" type="text" placeholder="Target Roblox username" />
+            <textarea id="warningReason" placeholder="Warning reason..."></textarea>
+          </div>
 
           <div class="toolbar">
             <button class="primary" id="giveWarningBtn">Give Warning</button>
@@ -166,6 +194,7 @@
                 <span>Accounts and ranks from database</span>
               </div>
             </div>
+
             <div id="staffList" class="list"></div>
           </div>
 
@@ -177,10 +206,12 @@
               </div>
             </div>
 
-            <input id="newEmail" type="email" placeholder="Staff email" />
-            <input id="newDisplayName" type="text" placeholder="Display name, example: Creative" />
-            <input id="newPassword" type="text" placeholder="Temporary password" />
-            <select id="newRank"></select>
+            <div class="form-stack">
+              <input id="newEmail" type="email" placeholder="Staff email" />
+              <input id="newDisplayName" type="text" placeholder="Display name, example: Creative" />
+              <input id="newPassword" type="text" placeholder="Temporary password" />
+              <select id="newRank"></select>
+            </div>
 
             <div class="toolbar">
               <button class="primary" id="createStaffBtn">Create Account</button>
@@ -203,6 +234,7 @@
                 <span>Permission chain</span>
               </div>
             </div>
+
             <div id="rankInfoList" class="list"></div>
           </div>
 
@@ -213,6 +245,7 @@
                 <span>Promote, demote, kick, reset password</span>
               </div>
             </div>
+
             <div id="rankManagementList" class="list"></div>
           </div>
         </div>
