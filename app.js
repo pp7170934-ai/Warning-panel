@@ -11,10 +11,13 @@ let session = null;
 let currentProfile = null;
 let profiles = [];
 let warnings = [];
+let autoRefreshTimer = null;
+let isLoadingAll = false;
+const AUTO_REFRESH_INTERVAL_MS = 3000;
 
 const titles = {
   dashboard: ["Dashboard", "Login with email and password."],
-  warnings: ["Warning List", "Saved warnings from the Supabase database."],
+  warnings: ["Warning List", "Staff/Admin see active warnings only. Manager+ can see removed warnings."],
   give: ["Give Warning", "Submit new warnings for players."],
   staff: ["Whitelist List", "Owner can create staff accounts here."],
   ranks: ["Ranks", "Manage promotions, demotions, kicks, and password resets."]
@@ -49,9 +52,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   sb.auth.onAuthStateChange(async (_event, newSession) => {
     session = newSession;
     await loadAll();
+    setupAutoRefresh();
   });
 
   await loadAll();
+  setupAutoRefresh();
 });
 
 function setupTabs() {
@@ -69,6 +74,32 @@ function setupTabs() {
       document.getElementById("pageSub").textContent = titles[tabId][1];
     });
   });
+}
+
+function setupAutoRefresh() {
+  if (autoRefreshTimer) {
+    clearInterval(autoRefreshTimer);
+    autoRefreshTimer = null;
+  }
+
+  if (!session) {
+    return;
+  }
+
+  autoRefreshTimer = setInterval(async () => {
+    if (!session || !sb || document.hidden) {
+      return;
+    }
+
+    await loadAll({ silent: true });
+  }, AUTO_REFRESH_INTERVAL_MS);
+}
+
+function stopAutoRefresh() {
+  if (autoRefreshTimer) {
+    clearInterval(autoRefreshTimer);
+    autoRefreshTimer = null;
+  }
 }
 
 function renderRankSelects() {
@@ -99,6 +130,7 @@ async function login() {
 async function logout() {
   if (!sb) return;
   await sb.auth.signOut();
+  stopAutoRefresh();
   session = null;
   currentProfile = null;
   profiles = [];
@@ -107,54 +139,72 @@ async function logout() {
   showToast("Logged out.");
 }
 
-async function loadAll() {
-  if (!sb) return;
+async function loadAll(options = {}) {
+  const silent = !!options.silent;
 
-  const sessionResult = await sb.auth.getSession();
-  session = sessionResult.data.session;
+  if (!sb || isLoadingAll) return;
 
-  if (!session) {
-    currentProfile = null;
-    profiles = [];
-    warnings = [];
+  isLoadingAll = true;
+
+  try {
+    const sessionResult = await sb.auth.getSession();
+    session = sessionResult.data.session;
+
+    if (!session) {
+      currentProfile = null;
+      profiles = [];
+      warnings = [];
+      updateAll();
+      return;
+    }
+
+    const userId = session.user.id;
+
+    const profileResult = await sb
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (profileResult.error) {
+      if (!silent) showToast(profileResult.error.message);
+      return;
+    }
+
+    currentProfile = profileResult.data;
+
+    const profilesResult = await sb
+      .from("profiles")
+      .select("*")
+      .order("created_at", { ascending: true });
+
+    if (!profilesResult.error) {
+      profiles = profilesResult.data || [];
+    } else if (!silent) {
+      showToast(profilesResult.error.message);
+    }
+
+    let warningsQuery = sb
+      .from("warnings")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!canSeeRemovedWarnings()) {
+      warningsQuery = warningsQuery.eq("active", true);
+    }
+
+    const warningsResult = await warningsQuery;
+
+    if (!warningsResult.error) {
+      warnings = warningsResult.data || [];
+    } else if (!silent) {
+      showToast(warningsResult.error.message);
+    }
+
     updateAll();
-    return;
+  } finally {
+    isLoadingAll = false;
   }
-
-  const userId = session.user.id;
-
-  const profileResult = await sb
-    .from("profiles")
-    .select("*")
-    .eq("id", userId)
-    .maybeSingle();
-
-  if (profileResult.error) {
-    showToast(profileResult.error.message);
-    return;
-  }
-
-  currentProfile = profileResult.data;
-
-  const profilesResult = await sb
-    .from("profiles")
-    .select("*")
-    .order("created_at", { ascending: true });
-
-  if (!profilesResult.error) {
-    profiles = profilesResult.data || [];
-  }
-
-  const warningsResult = await sb
-    .from("warnings")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (!warningsResult.error) {
-    warnings = warningsResult.data || [];
-  }
-
-  updateAll();
 }
 
 function updateAll() {
@@ -602,6 +652,10 @@ function getRankByLevel(level) {
 
 function isOwner() {
   return currentProfile?.rank === "owner";
+}
+
+function canSeeRemovedWarnings() {
+  return getRank(currentProfile?.rank).level >= 3;
 }
 
 function rankDescription(rank) {
