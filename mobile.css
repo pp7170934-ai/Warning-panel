@@ -1,702 +1,307 @@
 /* =========================================================
    MOBILE.CSS
-   Secure Roblox Warning Panel - Mobile Friendly Upgrade
-   Paste this whole file into mobile.css
+   Secure Roblox Warning Panel
+   Tablet + Phone Layout Fixes
    ========================================================= */
 
-* {
-	box-sizing: border-box;
+/* TABLET / SMALL LAPTOP */
+
+@media (max-width: 1100px) {
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    max-width: 100%;
+  }
 }
 
-html {
-	width: 100%;
-	max-width: 100%;
-	overflow-x: hidden;
-	-webkit-text-size-adjust: 100%;
+/* TABLET */
+
+@media (max-width: 850px) {
+  .app {
+    display: block;
+  }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 14px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand {
+    align-items: flex-start;
+  }
+
+  .nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nav button {
+    text-align: center;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .main {
+    padding: 16px;
+  }
+
+  .topbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .staff-card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .toolbar {
+    width: 100%;
+  }
+
+  .toolbar input {
+    flex: 1 1 100%;
+  }
 }
 
-body {
-	width: 100%;
-	max-width: 100%;
-	min-height: 100vh;
-	overflow-x: hidden;
-	margin: 0;
-}
-
-/* Prevent text from forcing the page sideways */
-body,
-div,
-section,
-main,
-header,
-footer,
-article,
-aside,
-nav,
-form,
-label,
-p,
-span,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-button,
-input,
-textarea,
-select,
-td,
-th {
-	overflow-wrap: break-word;
-	word-break: break-word;
-}
-
-/* Make images never overflow */
-img {
-	max-width: 100%;
-	height: auto;
-}
-
-/* Make buttons and inputs easier on phones */
-input,
-textarea,
-select,
-button {
-	max-width: 100%;
-	font-size: 16px;
-}
-
-/* Prevent iPhone zoom when clicking inputs */
-input,
-textarea,
-select {
-	font-size: 16px !important;
-}
-
-/* General app containers */
-.app,
-.page,
-.dashboard,
-.container,
-.main,
-.content,
-.wrapper,
-.panel,
-.card,
-.box,
-.auth-box,
-.login-box,
-.warning-panel,
-.staff-panel,
-.profile-panel,
-.avatar-panel {
-	max-width: 100%;
-}
-
-/* Tables should not break the mobile screen */
-table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-.table-wrapper,
-.warnings-table-wrapper,
-.warning-table-wrapper,
-.staff-table-wrapper,
-.users-table-wrapper,
-.logs-table-wrapper {
-	width: 100%;
-	max-width: 100%;
-	overflow-x: auto;
-	-webkit-overflow-scrolling: touch;
-}
-
-/* If a table is too wide, allow scrolling instead of destroying the layout */
-.table-wrapper table,
-.warnings-table-wrapper table,
-.warning-table-wrapper table,
-.staff-table-wrapper table,
-.users-table-wrapper table,
-.logs-table-wrapper table {
-	min-width: 650px;
-}
-
-/* =========================================================
-   AVATAR / PROFILE PICTURE MOBILE SUPPORT
-   ========================================================= */
-
-.avatar,
-.profile-avatar,
-.staff-avatar,
-.user-avatar,
-.avatar-img,
-.profile-picture,
-.profile-pic,
-.avatar-preview,
-.staff-profile-picture {
-	width: 48px;
-	height: 48px;
-	min-width: 48px;
-	min-height: 48px;
-	max-width: 48px;
-	max-height: 48px;
-	border-radius: 50%;
-	object-fit: cover;
-	display: block;
-}
-
-/* Bigger profile avatar if used in profile section */
-.profile-section .avatar,
-.profile-section .profile-avatar,
-.profile-section .profile-picture,
-.profile-panel .avatar,
-.profile-panel .profile-avatar,
-.profile-panel .profile-picture,
-.avatar-panel .avatar,
-.avatar-panel .profile-avatar,
-.avatar-panel .profile-picture {
-	width: 76px;
-	height: 76px;
-	min-width: 76px;
-	min-height: 76px;
-	max-width: 76px;
-	max-height: 76px;
-}
-
-/* Avatar row layout */
-.avatar-section,
-.avatar-upload,
-.profile-upload,
-.profile-header,
-.staff-profile-header,
-.user-profile-header,
-.profile-info,
-.staff-info,
-.user-info {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	flex-wrap: wrap;
-	max-width: 100%;
-}
-
-/* File input should fit phone width */
-.avatar-section input[type="file"],
-.avatar-upload input[type="file"],
-.profile-upload input[type="file"],
-.profile-panel input[type="file"],
-.avatar-panel input[type="file"] {
-	width: 100%;
-	max-width: 100%;
-}
-
-/* Avatar buttons */
-.avatar-section button,
-.avatar-upload button,
-.profile-upload button,
-.profile-panel button,
-.avatar-panel button {
-	max-width: 100%;
-}
-
-/* =========================================================
-   BUTTON / ACTION LAYOUT
-   ========================================================= */
-
-button,
-.btn,
-.button,
-.action-btn,
-.primary-btn,
-.secondary-btn,
-.danger-btn,
-.delete-btn,
-.remove-btn,
-.save-btn,
-.login-btn,
-.logout-btn,
-.upload-btn {
-	white-space: normal;
-	line-height: 1.2;
-	min-height: 40px;
-	cursor: pointer;
-}
-
-/* Common action rows */
-.actions,
-.action-row,
-.button-row,
-.form-row,
-.input-row,
-.warning-actions,
-.staff-actions,
-.profile-actions,
-.admin-actions,
-.owner-actions {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	flex-wrap: wrap;
-	max-width: 100%;
-}
-
-/* Forms */
-form,
-.form,
-.login-form,
-.warning-form,
-.staff-form,
-.profile-form,
-.create-staff-form {
-	width: 100%;
-	max-width: 100%;
-}
-
-/* Inputs */
-input,
-textarea,
-select {
-	width: 100%;
-}
-
-/* Textareas */
-textarea {
-	resize: vertical;
-}
-
-/* =========================================================
-   MODALS / POPUPS
-   ========================================================= */
-
-.modal,
-.popup,
-.dialog,
-.overlay-box,
-.confirm-box {
-	max-width: calc(100vw - 24px);
-}
-
-.modal-content,
-.popup-content,
-.dialog-content,
-.confirm-content {
-	max-width: 100%;
-}
-
-/* =========================================================
-   TABLET SIZE
-   ========================================================= */
-
-@media (max-width: 900px) {
-	body {
-		width: 100%;
-	}
-
-	.app,
-	.page,
-	.dashboard,
-	.container,
-	.main,
-	.content,
-	.wrapper {
-		width: 100%;
-		max-width: 100%;
-		padding-left: 14px;
-		padding-right: 14px;
-	}
-
-	.panel,
-	.card,
-	.box,
-	.auth-box,
-	.login-box,
-	.warning-panel,
-	.staff-panel,
-	.profile-panel,
-	.avatar-panel {
-		width: 100%;
-		max-width: 100%;
-	}
-
-	/* Any grid dashboard becomes one column */
-	.dashboard-grid,
-	.main-grid,
-	.panel-grid,
-	.card-grid,
-	.stats-grid,
-	.warning-grid,
-	.staff-grid,
-	.profile-grid {
-		display: grid;
-		grid-template-columns: 1fr !important;
-		gap: 14px;
-	}
-
-	/* Header/navbar wraps instead of overflowing */
-	header,
-	.header,
-	.navbar,
-	.topbar,
-	.nav,
-	.navigation {
-		flex-wrap: wrap;
-		gap: 10px;
-		max-width: 100%;
-	}
-
-	.header-actions,
-	.nav-actions,
-	.topbar-actions,
-	.navbar-actions {
-		width: 100%;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-	}
-
-	.header-actions button,
-	.nav-actions button,
-	.topbar-actions button,
-	.navbar-actions button {
-		flex: 1 1 140px;
-	}
-}
-
-/* =========================================================
-   PHONE SIZE
-   ========================================================= */
+/* PHONE */
 
 @media (max-width: 600px) {
-	body {
-		font-size: 14px;
-	}
+  body {
+    font-size: 14px;
+  }
 
-	.app,
-	.page,
-	.dashboard,
-	.container,
-	.main,
-	content,
-	.content,
-	.wrapper {
-		width: 100%;
-		padding: 10px;
-	}
+  .sidebar {
+    padding: 12px;
+  }
 
-	.panel,
-	.card,
-	.box,
-	.auth-box,
-	.login-box,
-	.warning-panel,
-	.staff-panel,
-	.profile-panel,
-	.avatar-panel {
-		width: 100%;
-		padding: 14px;
-		border-radius: 14px;
-	}
+  .brand {
+    gap: 10px;
+  }
 
-	h1 {
-		font-size: 24px;
-		line-height: 1.1;
-	}
+  .brand-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 14px;
+    font-size: 20px;
+  }
 
-	h2 {
-		font-size: 20px;
-		line-height: 1.15;
-	}
+  .brand h1 {
+    font-size: 18px;
+  }
 
-	h3 {
-		font-size: 17px;
-		line-height: 1.2;
-	}
+  .brand p {
+    font-size: 11px;
+  }
 
-	p {
-		font-size: 14px;
-		line-height: 1.4;
-	}
+  .nav {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
 
-	/* Login box */
-	.auth-box,
-	.login-box {
-		margin-left: auto;
-		margin-right: auto;
-		margin-top: 20px;
-		margin-bottom: 20px;
-	}
+  .nav button {
+    min-height: 42px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
 
-	/* Stack all common rows */
-	.actions,
-	.action-row,
-	.button-row,
-	.form-row,
-	.input-row,
-	.warning-actions,
-	.staff-actions,
-	.profile-actions,
-	.admin-actions,
-	.owner-actions {
-		flex-direction: column;
-		align-items: stretch;
-		width: 100%;
-		gap: 8px;
-	}
+  .main {
+    padding: 12px;
+  }
 
-	.actions > *,
-	.action-row > *,
-	.button-row > *,
-	.form-row > *,
-	.input-row > *,
-	.warning-actions > *,
-	.staff-actions > *,
-	.profile-actions > *,
-	.admin-actions > *,
-	.owner-actions > * {
-		width: 100%;
-	}
+  .title h2 {
+    font-size: 25px;
+  }
 
-	input,
-	textarea,
-	select,
-	button,
-	.btn,
-	.button,
-	.action-btn,
-	.primary-btn,
-	.secondary-btn,
-	.danger-btn,
-	.delete-btn,
-	.remove-btn,
-	.save-btn,
-	.login-btn,
-	.logout-btn,
-	.upload-btn {
-		width: 100%;
-	}
+  .title p {
+    font-size: 13px;
+  }
 
-	button,
-	.btn,
-	.button,
-	.action-btn,
-	.primary-btn,
-	secondary-btn,
-	.secondary-btn,
-	.danger-btn,
-	.delete-btn,
-	.remove-btn,
-	.save-btn,
-	.login-btn,
-	.logout-btn,
-	.upload-btn {
-		min-height: 44px;
-		padding: 10px 12px;
-	}
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 
-	textarea {
-		min-height: 90px;
-	}
+  .stat {
+    padding: 15px;
+    border-radius: 16px;
+  }
 
-	/* Avatar becomes cleaner on phones */
-	.avatar,
-	.profile-avatar,
-	.staff-avatar,
-	.user-avatar,
-	.avatar-img,
-	.profile-picture,
-	.profile-pic,
-	.avatar-preview,
-	.staff-profile-picture {
-		width: 64px;
-		height: 64px;
-		min-width: 64px;
-		min-height: 64px;
-		max-width: 64px;
-		max-height: 64px;
-	}
+  .stat h3 {
+    font-size: 24px;
+  }
 
-	.profile-section .avatar,
-	.profile-section .profile-avatar,
-	.profile-section .profile-picture,
-	.profile-panel .avatar,
-	.profile-panel .profile-avatar,
-	.profile-panel .profile-picture,
-	.avatar-panel .avatar,
-	.avatar-panel .profile-avatar,
-	.avatar-panel .profile-picture {
-		width: 88px;
-		height: 88px;
-		min-width: 88px;
-		min-height: 88px;
-		max-width: 88px;
-		max-height: 88px;
-	}
+  .grid-2 {
+    gap: 12px;
+  }
 
-	.avatar-section,
-	.avatar-upload,
-	.profile-upload,
-	.profile-header,
-	.staff-profile-header,
-	.user-profile-header,
-	.profile-info,
-	.staff-info,
-	.user-info {
-		flex-direction: column;
-		align-items: flex-start;
-		width: 100%;
-	}
+  .panel {
+    padding: 14px;
+    border-radius: 16px;
+  }
 
-	/* Staff / warning cards */
-	.staff-card,
-	.profile-card,
-	.warning-card,
-	.user-card,
-	.log-card {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-	}
+  .panel-header {
+    margin-bottom: 13px;
+  }
 
-	.staff-card-header,
-	.profile-card-header,
-	.warning-card-header,
-	.user-card-header {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		width: 100%;
-	}
+  .panel-header h3 {
+    font-size: 17px;
+  }
 
-	.warning-item,
-	.warning-row,
-	.staff-row,
-	.user-row,
-	.log-row {
-		padding: 12px;
-		border-radius: 12px;
-	}
+  .panel-header span {
+    font-size: 11px;
+  }
 
-	/* Modals fit phone screen */
-	.modal,
-	.popup,
-	.dialog,
-	overlay-box,
-	.overlay-box,
-	.confirm-box {
-		width: calc(100vw - 20px) !important;
-		max-width: calc(100vw - 20px) !important;
-		max-height: calc(100vh - 30px);
-		overflow-y: auto;
-	}
+  input,
+  textarea,
+  select {
+    min-height: 44px;
+    font-size: 16px;
+    border-radius: 12px;
+  }
 
-	.modal-content,
-	.popup-content,
-	.dialog-content,
-	.confirm-content {
-		width: 100%;
-		max-width: 100%;
-		padding: 14px;
-	}
+  textarea {
+    min-height: 98px;
+  }
 
-	/* File upload */
-	input[type="file"] {
-		font-size: 14px;
-		padding: 10px;
-		border-radius: 10px;
-	}
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
 
-	/* Hide extra spacing that usually looks bad on phones */
-	.desktop-only {
-		display: none !important;
-	}
+  .toolbar input,
+  .toolbar button,
+  .primary,
+  .ghost,
+  .danger,
+  .small-btn {
+    width: 100%;
+  }
 
-	.mobile-center {
-		text-align: center;
-		align-items: center;
-		justify-content: center;
-	}
+  button,
+  .primary,
+  .ghost,
+  .danger,
+  .small-btn {
+    min-height: 44px;
+    padding: 11px 12px;
+  }
+
+  .staff-card {
+    padding: 11px;
+    border-radius: 16px;
+  }
+
+  .avatar {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    min-height: 52px;
+  }
+
+  .profile-picture-area {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-preview {
+    width: 92px;
+    height: 92px;
+    min-width: 92px;
+    min-height: 92px;
+  }
+
+  .profile-upload-box {
+    width: 100%;
+  }
+
+  #avatarFileInput {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .item-header,
+  .warning-header,
+  .staff-header,
+  .rank-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .item,
+  .warning-item,
+  .staff-item,
+  .rank-item,
+  .log-item {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .badge {
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .toast {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    max-width: none;
+  }
 }
 
-/* =========================================================
-   VERY SMALL PHONE SIZE
-   ========================================================= */
+/* VERY SMALL PHONES */
 
 @media (max-width: 380px) {
-	h1 {
-		font-size: 21px;
-	}
+  .main {
+    padding: 10px;
+  }
 
-	h2 {
-		font-size: 18px;
-	}
+  .sidebar {
+    padding: 10px;
+  }
 
-	h3 {
-		font-size: 16px;
-	}
+  .brand h1 {
+    font-size: 16px;
+  }
 
-	.panel,
-	.card,
-	.box,
-	.auth-box,
-	.login-box,
-	.warning-panel,
-	.staff-panel,
-	.profile-panel,
-	.avatar-panel {
-		padding: 12px;
-		border-radius: 12px;
-	}
+  .brand p {
+    font-size: 10px;
+  }
 
-	.avatar,
-	.profile-avatar,
-	.staff-avatar,
-	.user-avatar,
-	.avatar-img,
-	.profile-picture,
-	.profile-pic,
-	.avatar-preview,
-	.staff-profile-picture {
-		width: 56px;
-		height: 56px;
-		min-width: 56px;
-		min-height: 56px;
-		max-width: 56px;
-		max-height: 56px;
-	}
+  .title h2 {
+    font-size: 22px;
+  }
 
-	.profile-section .avatar,
-	.profile-section .profile-avatar,
-	.profile-section .profile-picture,
-	.profile-panel .avatar,
-	.profile-panel .profile-avatar,
-	.profile-panel .profile-picture,
-	.avatar-panel .avatar,
-	.avatar-panel .profile-avatar,
-	.avatar-panel .profile-picture {
-		width: 76px;
-		height: 76px;
-		min-width: 76px;
-		min-height: 76px;
-		max-width: 76px;
-		max-height: 76px;
-	}
+  .panel {
+    padding: 12px;
+  }
 
-	button,
-	.btn,
-	.button,
-	.action-btn,
-	.primary-btn,
-	.secondary-btn,
-	.danger-btn,
-	.delete-btn,
-	.remove-btn,
-	.save-btn,
-	.login-btn,
-	.logout-btn,
-	.upload-btn {
-		font-size: 14px;
-	}
+  .profile-preview {
+    width: 82px;
+    height: 82px;
+    min-width: 82px;
+    min-height: 82px;
+  }
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+  }
 }
