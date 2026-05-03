@@ -91,6 +91,29 @@
             <div id="latestWarnings" class="list"></div>
           </div>
         </div>
+
+        <div id="profilePicturePanel" class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h3>Profile Picture</h3>
+              <span>Upload your staff avatar from your computer</span>
+            </div>
+          </div>
+
+          <div class="profile-picture-area">
+            <div class="profile-preview" id="profilePreview">?</div>
+            <div class="profile-upload-box">
+              <input id="avatarFileInput" type="file" accept="image/png,image/jpeg,image/jpg,image/webp,image/gif" />
+              <div class="toolbar">
+                <button class="primary" id="uploadAvatarBtn">Upload Avatar</button>
+                <button class="ghost" id="removeAvatarBtn">Remove Avatar</button>
+              </div>
+              <p class="small-note">
+                Recommended: square image, PNG/JPG/WebP/GIF, under 2 MB. This shows in the top-right profile card, Whitelist List, and Ranks tab.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section id="warnings" class="tab-page">

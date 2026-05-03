@@ -45,6 +45,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("createStaffBtn").addEventListener("click", createStaff);
   document.getElementById("generatePasswordBtn").addEventListener("click", generatePassword);
   document.getElementById("warningSearch").addEventListener("input", renderWarnings);
+  document.getElementById("uploadAvatarBtn").addEventListener("click", uploadMyAvatar);
+  document.getElementById("removeAvatarBtn").addEventListener("click", removeMyAvatar);
 
   const result = await sb.auth.getSession();
   session = result.data.session;
@@ -220,10 +222,119 @@ function updateAll() {
 function updateHeader() {
   const name = currentProfile?.display_name || currentProfile?.email || "Not logged in";
   const rank = getRank(currentProfile?.rank);
+  const avatar = document.getElementById("staffAvatar");
 
   document.getElementById("staffName").textContent = name;
   document.getElementById("staffRank").textContent = currentProfile ? rank.name : "No Access";
-  document.getElementById("staffAvatar").textContent = currentProfile ? name[0].toUpperCase() : "?";
+
+  if (avatar) {
+    avatar.innerHTML = avatarHtml(currentProfile, "staff-card-img");
+  }
+
+  renderProfilePicturePanel();
+}
+
+function renderProfilePicturePanel() {
+  const panel = document.getElementById("profilePicturePanel");
+  const preview = document.getElementById("profilePreview");
+
+  if (!panel || !preview) return;
+
+  panel.classList.toggle("hidden", !currentProfile);
+  preview.innerHTML = avatarHtml(currentProfile, "profile-preview-img");
+}
+
+function avatarHtml(profile, className = "staff-avatar-img") {
+  const name = profile?.display_name || profile?.email || "?";
+  const letter = escapeHtml((name[0] || "?").toUpperCase());
+  const url = profile?.avatar_url;
+
+  if (url) {
+    return `<img class="${className}" src="${escapeAttr(url)}" alt="${escapeAttr(name)} avatar" onerror="this.replaceWith(document.createTextNode('${letter}'))">`;
+  }
+
+  return letter;
+}
+
+async function uploadMyAvatar() {
+  if (!currentProfile || !session) {
+    showToast("Login first.");
+    return;
+  }
+
+  const input = document.getElementById("avatarFileInput");
+  const file = input.files && input.files[0];
+
+  if (!file) {
+    showToast("Choose an image file first.");
+    return;
+  }
+
+  const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"];
+
+  if (!allowedTypes.includes(file.type)) {
+    showToast("Only PNG, JPG, WebP, or GIF images are allowed.");
+    return;
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    showToast("Avatar must be under 2 MB.");
+    return;
+  }
+
+  const extension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "png";
+  const path = `${currentProfile.id}/avatar-${Date.now()}.${extension}`;
+
+  const uploadResult = await sb.storage
+    .from("avatars")
+    .upload(path, file, {
+      cacheControl: "3600",
+      upsert: false,
+      contentType: file.type
+    });
+
+  if (uploadResult.error) {
+    showToast(uploadResult.error.message);
+    return;
+  }
+
+  const publicResult = sb.storage
+    .from("avatars")
+    .getPublicUrl(path);
+
+  const publicUrl = publicResult.data.publicUrl;
+
+  const rpcResult = await sb.rpc("set_my_avatar", {
+    new_avatar_url: publicUrl
+  });
+
+  if (rpcResult.error) {
+    showToast(rpcResult.error.message);
+    return;
+  }
+
+  input.value = "";
+  showToast("Avatar updated.");
+  await loadAll();
+}
+
+async function removeMyAvatar() {
+  if (!currentProfile || !session) {
+    showToast("Login first.");
+    return;
+  }
+
+  const rpcResult = await sb.rpc("set_my_avatar", {
+    new_avatar_url: null
+  });
+
+  if (rpcResult.error) {
+    showToast(rpcResult.error.message);
+    return;
+  }
+
+  showToast("Avatar removed.");
+  await loadAll();
 }
 
 function renderStats() {
@@ -531,7 +642,10 @@ function renderStaffList() {
     return `
       <div class="item">
         <div class="item-top">
-          <h4>${escapeHtml(profile.display_name || profile.email)}</h4>
+          <div class="staff-list-title">
+            <div class="staff-list-avatar">${avatarHtml(profile, "staff-avatar-img")}</div>
+            <h4>${escapeHtml(profile.display_name || profile.email)}</h4>
+          </div>
           <span class="badge purple">${escapeHtml(rank.name)}</span>
         </div>
         <p><strong>Email:</strong> ${escapeHtml(profile.email || "Unknown")}</p>
@@ -675,6 +789,15 @@ function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = String(text || "");
   return div.innerHTML;
+}
+
+function escapeAttr(text) {
+  return String(text || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 function formatDate(value) {
